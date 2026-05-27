@@ -1,0 +1,42 @@
+{
+  "name": "virtual-interviewer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --names \"web,agent\" --prefix-colors \"yellow,cyan\" \"npm:dev:web\" \"npm:dev:agent\"",
+    "dev:web": "next dev",
+    "dev:agent": "tsx agent/agent.ts dev",
+    "build": "next build",
+    "start": "concurrently --names \"web,agent\" --prefix-colors \"yellow,cyan\" \"npm:start:web\" \"npm:start:agent\"",
+    "start:web": "next start",
+    "start:agent": "tsx agent/agent.ts start"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
+    "@livekit/agents": "^1.0.0",
+    "@livekit/agents-plugin-openai": "^1.0.0",
+    "@livekit/agents-plugin-silero": "^1.0.0",
+    "@livekit/components-react": "^2.6.0",
+    "@livekit/components-styles": "^1.1.0",
+    "@livekit/noise-cancellation-node": "^0.1.0",
+    "@rive-app/react-canvas": "^4.16.0",
+    "dotenv": "^16.4.0",
+    "livekit-client": "^2.7.0",
+    "livekit-server-sdk": "^2.8.0",
+    "next": "15.0.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.0",
+    "concurrently": "^9.0.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
