@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
+import {
+  AccessToken,
+  AgentDispatchClient,
+  RoomServiceClient,
+} from "livekit-server-sdk";
 import type { InterviewPlan } from "@/lib/types";
+
+// Must match WorkerOptions.agentName in agent/agent.ts. Explicit dispatch
+// (instead of automatic per-room dispatch) prevents stale pre-created rooms
+// from claiming the worker and starving the actual candidate's room.
+const AGENT_NAME = "interviewer";
 
 /**
  * Browser calls this with the interview plan after /api/prepare.
@@ -42,7 +51,13 @@ export async function POST(req: NextRequest) {
       maxParticipants: 2, // candidate + agent
     });
 
-    // 2. Mint JWT for candidate
+    // 2. Explicitly dispatch the interviewer agent to this exact room.
+    // Without this the worker (in explicit-dispatch mode via agentName) will
+    // not join the room.
+    const dispatchClient = new AgentDispatchClient(httpUrl, apiKey, apiSecret);
+    await dispatchClient.createDispatch(roomName, AGENT_NAME);
+
+    // 3. Mint JWT for candidate
     const at = new AccessToken(apiKey, apiSecret, {
       identity: `candidate-${Date.now()}`,
       name: "Candidate",

@@ -300,4 +300,14 @@ export default defineAgent({
   },
 });
 
-cli.runApp(new WorkerOptions({ agent: fileURLToPath(import.meta.url) }));
+// Setting agentName switches the worker to *explicit dispatch* mode: the
+// worker only accepts jobs that target this name. The /api/livekit-token
+// route calls AgentDispatchClient.createDispatch() with this exact name
+// so each candidate gets a fresh, room-specific dispatch instead of the
+// worker auto-claiming whatever stale room shows up first.
+cli.runApp(
+  new WorkerOptions({
+    agent: fileURLToPath(import.meta.url),
+    agentName: "interviewer",
+  }),
+);
