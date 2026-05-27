@@ -112,8 +112,9 @@ export default defineAgent({
   },
 
   entry: async (ctx: JobContext) => {
-    console.log(`Agent starting for room ${ctx.room.name}`);
+    console.log(`Agent job received (room name not yet known, awaiting connect)`);
     await ctx.connect();
+    console.log(`Agent connected to room "${ctx.room.name}" (sid=${ctx.room.sid ?? "?"})`);
 
     // Read interview plan from room metadata (set by /api/livekit-token)
     let plan: InterviewPlan;
@@ -126,6 +127,17 @@ export default defineAgent({
       return;
     }
     console.log(`Loaded plan with ${plan.skill_areas.length} skill areas`);
+
+    // Snapshot who's already in the room before we wait. If this is empty *and*
+    // stays empty, the worker is likely sitting in a stale pre-created room and
+    // the candidate joined a different one.
+    const existing = Array.from(ctx.room.remoteParticipants.values()).map(
+      (p) => `${p.identity} (kind=${p.info?.kind})`,
+    );
+    console.log(
+      `Remote participants already in room (${existing.length}): ${existing.join(", ") || "(none)"}`,
+    );
+    console.log("Waiting for candidate participant…");
 
     const participant = await ctx.waitForParticipant();
     console.log(`Candidate joined: ${participant.identity}`);
