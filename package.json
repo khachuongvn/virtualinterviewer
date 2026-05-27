@@ -2,6 +2,9 @@
   "name": "virtual-interviewer",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "concurrently --names \"web,agent\" --prefix-colors \"yellow,cyan\" \"npm:dev:web\" \"npm:dev:agent\"",
     "dev:web": "next dev",
