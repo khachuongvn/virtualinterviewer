@@ -225,25 +225,35 @@ export default defineAgent({
 
     // ── Wire session events → avatar state ──────────────────────────────────
 
-    session.on("user_started_speaking", () => {
-      void avatar.state("listening");
-    });
-    session.on("user_stopped_speaking", () => {
-      void avatar.state("thinking");
-    });
-    session.on("agent_started_speaking", () => {
-      void avatar.state("talking");
-    });
-    session.on("agent_stopped_speaking", () => {
-      void avatar.state("idle");
+    // Agents v1 collapsed *_started/stopped_speaking into agent_state_changed.
+    // AgentState ("idle"|"listening"|"thinking"|"speaking") maps 1:1 to avatar
+    // state, with "speaking" → "talking" for the Rive state machine naming.
+    session.on(voice.AgentSessionEventTypes.AgentStateChanged, (ev) => {
+      switch (ev.newState) {
+        case "listening":
+          void avatar.state("listening");
+          break;
+        case "thinking":
+          void avatar.state("thinking");
+          break;
+        case "speaking":
+          void avatar.state("talking");
+          break;
+        case "idle":
+        case "initializing":
+          void avatar.state("idle");
+          break;
+      }
     });
 
     // Capture interviewer turns for transcript
-    session.on("conversation_item_added", (item: any) => {
-      if (item?.role === "assistant" && typeof item?.content === "string") {
-        transcript.push({ role: "interviewer", text: item.content });
-        void avatar.transcript("interviewer", item.content);
-      }
+    session.on(voice.AgentSessionEventTypes.ConversationItemAdded, (ev) => {
+      const item = ev.item;
+      if (item.type !== "message" || item.role !== "assistant") return;
+      const text = item.textContent;
+      if (!text) return;
+      transcript.push({ role: "interviewer", text });
+      void avatar.transcript("interviewer", text);
     });
 
     // ── Start ───────────────────────────────────────────────────────────────
