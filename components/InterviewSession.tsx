@@ -132,7 +132,7 @@ export default function InterviewSession({ plan }: { plan: InterviewPlan }) {
   if (error) {
     return (
       <div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-700">
-        <strong>Connection error:</strong> {error}
+        <strong>Lỗi kết nối:</strong> {error}
       </div>
     );
   }
@@ -147,18 +147,18 @@ export default function InterviewSession({ plan }: { plan: InterviewPlan }) {
             onClick={handleEnd}
             className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
           >
-            End interview
+            Kết thúc phỏng vấn
           </button>
         </div>
         <div ref={audioMountRef} className="hidden" />
       </div>
 
       <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <h2 className="mb-3 text-sm font-medium text-neutral-600">Live transcript</h2>
+        <h2 className="mb-3 text-sm font-medium text-neutral-600">Hội thoại trực tiếp</h2>
         <div className="max-h-[520px] space-y-3 overflow-y-auto pr-2">
           {transcript.length === 0 && (
             <p className="text-sm text-neutral-400">
-              Waiting for conversation to start…
+              Đang chờ bắt đầu hội thoại…
             </p>
           )}
           {transcript.map((t, i) => (
@@ -168,7 +168,7 @@ export default function InterviewSession({ plan }: { plan: InterviewPlan }) {
                   t.role === "interviewer" ? "text-neutral-400" : "text-amber-600"
                 }`}
               >
-                {t.role}
+                {t.role === "interviewer" ? "Phỏng vấn viên" : "Ứng viên"}
               </span>
               <p className="mt-0.5 text-sm leading-relaxed text-neutral-800">
                 {t.text}
@@ -192,15 +192,15 @@ function StateIndicator({
     return (
       <span className="inline-flex items-center gap-2 text-sm text-neutral-500">
         <span className="h-2 w-2 animate-pulse rounded-full bg-neutral-400" />
-        Connecting…
+        Đang kết nối…
       </span>
     );
   }
   const labels: Record<AvatarState, [string, string]> = {
-    idle: ["Ready", "bg-neutral-400"],
-    listening: ["Listening", "bg-emerald-500 animate-pulse"],
-    thinking: ["Thinking", "bg-amber-500 animate-pulse"],
-    talking: ["Speaking", "bg-blue-500"],
+    idle: ["Sẵn sàng", "bg-neutral-400"],
+    listening: ["Đang nghe", "bg-emerald-500 animate-pulse"],
+    thinking: ["Đang suy nghĩ", "bg-amber-500 animate-pulse"],
+    talking: ["Đang nói", "bg-blue-500"],
   };
   const [label, dot] = labels[state];
   return (

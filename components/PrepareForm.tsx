@@ -75,9 +75,9 @@ export default function PrepareForm() {
 
   return (
     <div className="space-y-6">
-      <Field label="Job description" value={jd} onChange={setJd} rows={6} />
-      <Field label="Candidate CV" value={cv} onChange={setCv} rows={6} />
-      <Field label="Rubric" value={rubric} onChange={setRubric} rows={5} />
+      <Field label="Mô tả công việc" value={jd} onChange={setJd} rows={6} />
+      <Field label="Hồ sơ ứng viên" value={cv} onChange={setCv} rows={6} />
+      <Field label="Tiêu chí đánh giá" value={rubric} onChange={setRubric} rows={5} />
 
       {error && (
         <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -90,12 +90,13 @@ export default function PrepareForm() {
         disabled={loading}
         className="w-full rounded-md bg-amber-600 px-4 py-3 font-medium text-white hover:bg-amber-700 disabled:opacity-50"
       >
-        {loading ? "Preparing interview…" : "Start interview"}
+        {loading ? "Đang chuẩn bị buổi phỏng vấn…" : "Bắt đầu phỏng vấn"}
       </button>
 
       <p className="text-xs text-neutral-500">
-        Claude (Opus) generates the interview plan in ~3-6 seconds. The plan
-        includes skill areas, persona, opener, and first question.
+        Hệ thống sẽ phân tích hồ sơ và mô tả công việc để xây dựng kế hoạch
+        phỏng vấn riêng (mất khoảng 3–6 giây) gồm các chủ đề kỹ năng, vai trò
+        người phỏng vấn, lời chào và câu hỏi mở đầu.
       </p>
     </div>
   );

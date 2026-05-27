@@ -25,7 +25,7 @@ export default function InterviewPage() {
   if (!plan) {
     return (
       <main className="flex min-h-screen items-center justify-center text-neutral-500">
-        Loading interview…
+        Đang tải buổi phỏng vấn…
       </main>
     );
   }
@@ -38,7 +38,7 @@ export default function InterviewPage() {
         </h1>
         <p className="text-sm text-neutral-600">{plan.persona.role}</p>
         <p className="mt-2 text-xs text-neutral-500">
-          Covering: {plan.skill_areas.map((a) => a.name).join(" · ")}
+          Chủ đề: {plan.skill_areas.map((a) => a.name).join(" · ")}
         </p>
       </div>
       <InterviewSession plan={plan} />
