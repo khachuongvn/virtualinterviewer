@@ -114,7 +114,7 @@ export default defineAgent({
   entry: async (ctx: JobContext) => {
     console.log(`Agent job received (room name not yet known, awaiting connect)`);
     await ctx.connect();
-    console.log(`Agent connected to room "${ctx.room.name}" (sid=${ctx.room.sid ?? "?"})`);
+    console.log(`Agent connected to room "${ctx.room.name}"`);
 
     // Read interview plan from room metadata (set by /api/livekit-token)
     let plan: InterviewPlan;
@@ -279,6 +279,13 @@ export default defineAgent({
       },
     });
     await avatar.state("idle");
+
+    // Kick off the conversation — without this, server_vad waits for the
+    // candidate to speak first, but the persona instructions tell the agent
+    // to deliver the opener line and first question. generateReply() asks
+    // the Realtime model to produce a turn based on those instructions.
+    console.log("Triggering agent opener via generateReply()");
+    session.generateReply();
 
     // ── Wait for candidate to disconnect ────────────────────────────────────
 
