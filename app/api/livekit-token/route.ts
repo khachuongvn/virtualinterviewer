@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  AccessToken,
-  AgentDispatchClient,
-  RoomServiceClient,
-} from "livekit-server-sdk";
+import { AccessToken } from "livekit-server-sdk";
+import { RoomAgentDispatch, RoomConfiguration } from "@livekit/protocol";
 import type { InterviewPlan } from "@/lib/types";
 
-// Must match WorkerOptions.agentName in agent/agent.ts. Explicit dispatch
-// (instead of automatic per-room dispatch) prevents stale pre-created rooms
-// from claiming the worker and starving the actual candidate's room.
+// Must match WorkerOptions.agentName in agent/agent.ts. The worker runs in
+// explicit-dispatch mode (it only accepts jobs whose agentName matches), so
+// every issued JWT must include a RoomAgentDispatch entry for this name.
 const AGENT_NAME = "interviewer";
 
 /**
@@ -39,35 +36,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Create room with plan as metadata (so agent can read it on connect)
+    // Build a JWT that, on first join, creates the room with the right
+    // metadata AND dispatches the interviewer agent. No pre-create call,
+    // so there is no window where a stale empty room can claim the worker.
     const roomName = `interview-${crypto.randomUUID()}`;
-    const httpUrl = url.replace(/^wss?:\/\//, "https://");
-    const svc = new RoomServiceClient(httpUrl, apiKey, apiSecret);
 
-    await svc.createRoom({
-      name: roomName,
-      metadata: JSON.stringify({ plan }),
-      emptyTimeout: 300, // close room 5min after last participant leaves
-      maxParticipants: 2, // candidate + agent
-    });
-
-    // 2. Explicitly dispatch the interviewer agent to this exact room.
-    // Without this the worker (in explicit-dispatch mode via agentName) will
-    // not join the room.
-    const dispatchClient = new AgentDispatchClient(httpUrl, apiKey, apiSecret);
-    await dispatchClient.createDispatch(roomName, AGENT_NAME);
-
-    // 3. Mint JWT for candidate
     const at = new AccessToken(apiKey, apiSecret, {
       identity: `candidate-${Date.now()}`,
       name: "Candidate",
     });
     at.addGrant({
       roomJoin: true,
+      roomCreate: true, // candidate's join creates the room via roomConfig
       room: roomName,
       canPublish: true,
       canSubscribe: true,
       canPublishData: true,
+    });
+    at.roomConfig = new RoomConfiguration({
+      name: roomName,
+      emptyTimeout: 300, // close room 5min after last participant leaves
+      maxParticipants: 2, // candidate + agent
+      metadata: JSON.stringify({ plan }),
+      agents: [new RoomAgentDispatch({ agentName: AGENT_NAME })],
     });
 
     const token = await at.toJwt();

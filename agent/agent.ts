@@ -113,7 +113,12 @@ export default defineAgent({
 
   entry: async (ctx: JobContext) => {
     console.log(`Agent job received (room name not yet known, awaiting connect)`);
-    await ctx.connect();
+    try {
+      await ctx.connect();
+    } catch (err) {
+      console.error("ctx.connect() threw:", err);
+      throw err;
+    }
     console.log(`Agent connected to room "${ctx.room.name}"`);
 
     // Read interview plan from room metadata (set by /api/livekit-token)
