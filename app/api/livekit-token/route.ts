@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AccessToken } from "livekit-server-sdk";
-import { RoomAgentDispatch, RoomConfiguration } from "@livekit/protocol";
+import { RoomConfiguration } from "@livekit/protocol";
 import type { InterviewPlan } from "@/lib/types";
-
-// Must match WorkerOptions.agentName in agent/agent.ts. The worker runs in
-// explicit-dispatch mode (it only accepts jobs whose agentName matches), so
-// every issued JWT must include a RoomAgentDispatch entry for this name.
-const AGENT_NAME = "interviewer";
 
 /**
  * Browser calls this with the interview plan after /api/prepare.
@@ -58,7 +53,6 @@ export async function POST(req: NextRequest) {
       emptyTimeout: 300, // close room 5min after last participant leaves
       maxParticipants: 2, // candidate + agent
       metadata: JSON.stringify({ plan }),
-      agents: [new RoomAgentDispatch({ agentName: AGENT_NAME })],
     });
 
     const token = await at.toJwt();
