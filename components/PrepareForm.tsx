@@ -3,24 +3,45 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const EXAMPLE_JD = `Senior Backend Engineer at Anthropic
-- Design and operate distributed systems serving billions of requests
-- Strong systems thinking, ownership, debugging skills
-- Comfortable with Go or Rust, Kubernetes, observability stacks
-- 5+ years experience`;
+const EXAMPLE_JD = `Senior QA Engineer — Công ty Fintech ABC
+- Thiết kế test plan & test case cho hệ thống thanh toán/ví điện tử
+- Kiểm thử thủ công lẫn tự động hoá (web + mobile iOS/Android)
+- Xây dựng và duy trì automation framework (Selenium/Cypress/Appium)
+- Tích hợp test vào CI/CD pipeline (Jenkins, GitHub Actions)
+- Phối hợp với dev/PM/BA trong môi trường Agile/Scrum
+- Yêu cầu: 4+ năm kinh nghiệm QA, hiểu API testing (Postman), SQL cơ bản
+- Ưu tiên: có chứng chỉ ISTQB, từng test sản phẩm fintech/ngân hàng`;
 
-const EXAMPLE_CV = `Nguyen Van A
-Senior Software Engineer, ABC Corp (2020-present)
-- Led migration from monolith to microservices
-- Built event-driven order processing handling 50k req/min
-- Languages: Go, Python, TypeScript
-- Open-source contributor to Kafka client library`;
+const EXAMPLE_CV = `Phạm Thị Yến — QA Engineer
+Email: yen.pham@example.com | 5 năm kinh nghiệm
 
-const EXAMPLE_RUBRIC = `Evaluate on:
-1. System design (40%) — can they decompose a problem, reason about tradeoffs?
-2. Debugging and operations (25%) — production instincts, observability mindset
-3. Code quality (20%) — testability, abstractions, simplicity
-4. Communication (15%) — clarity, ability to explain to non-experts`;
+DevUP (2022 – nay) — Senior QA Engineer
+- Phụ trách kiểm thử ứng dụng ví điện tử (Android, iOS, web)
+- Viết và maintain ~400 automation test case bằng Cypress + Appium
+- Tích hợp test suite vào Jenkins, giảm thời gian regression từ 2 ngày xuống 4 tiếng
+- Review test plan cho team 6 QA, mentor 2 junior
+
+VietDevelopers (2020 – 2022) — QA Engineer
+- Manual test cho e-commerce platform (~50k DAU)
+- Thiết kế test case cho luồng checkout, payment gateway tích hợp VNPay/Momo
+- Báo cáo và theo dõi bug trên Jira, viết test report hàng sprint
+
+Kỹ năng:
+- Manual testing, automation (Cypress, Selenium, Appium)
+- API testing: Postman, Newman
+- SQL: PostgreSQL, MySQL (truy vấn cơ bản đến trung bình)
+- CI/CD: Jenkins, GitHub Actions
+- Chứng chỉ ISTQB Foundation Level (2021)`;
+
+const EXAMPLE_RUBRIC = `Đánh giá ứng viên QA theo các tiêu chí:
+
+1. Tư duy kiểm thử (35%) — khả năng phân tích yêu cầu, thiết kế test case có độ phủ tốt, nghĩ ra edge case mà dev dễ bỏ sót.
+
+2. Kỹ năng automation (30%) — kinh nghiệm thực tế với framework, biết khi nào nên automate vs manual, cách viết test ổn định (giảm flakiness).
+
+3. Hiểu biết về hệ thống (20%) — hiểu cơ bản về API, database, CI/CD; biết cách debug khi test fail không rõ do bug hay do môi trường.
+
+4. Giao tiếp & teamwork (15%) — diễn đạt bug rõ ràng, biết khi nào escalate, phối hợp tốt với dev/PM trong sprint.`;
 
 export default function PrepareForm() {
   const router = useRouter();
