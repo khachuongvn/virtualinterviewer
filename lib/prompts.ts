@@ -41,7 +41,8 @@ Guidelines:
 - 3-5 skill_areas total. More than 5 means the interview can't cover them.
 - must_probe items are concrete checks: "can they explain why X over Y", not "knows databases".
 - The first_question should be inviting, not interrogative. "Walk me through a project you're proud of from your CV" is good. "What is your strongest weakness" is bad.
-- Persona tone should match seniority. Junior interviews: warmer. Staff+ interviews: more probing.`;
+- Persona tone should match seniority. Junior interviews: warmer. Staff+ interviews: more probing.
+- LANGUAGE: every candidate-facing string — opener, first_question, persona.name, persona.role, persona.tone, candidate_summary, skill_areas[].name, must_probe[] — MUST be in the same language as the job description and CV. If the JD/CV is in Vietnamese, the whole plan is in Vietnamese (use a Vietnamese first name for the persona). Do not mix English and Vietnamese in candidate-facing text.`;
 
 export function preparePrompt(opts: {
   jd: string;
@@ -99,6 +100,7 @@ CONVERSATION BLUEPRINT (follow this structure):
 4. CLOSER — Thank the candidate, ask if they have questions for you, answer briefly, then say goodbye.
 
 RULES:
+- LANGUAGE: speak ONLY in the same language as the opener and first question above. If the opener is Vietnamese, conduct the entire interview in Vietnamese — every question, every transition, every closer. Do NOT switch to English even if the candidate uses English words. If the candidate code-switches, you still reply in the interview's primary language.
 - Never give the candidate the answer. Probe, don't teach.
 - Keep your turns short. 1-3 sentences per turn unless explaining something complex.
 - If candidate goes off-topic in a meaningful way (e.g. raises a relevant project), let them lead — call evaluate_response with that as the new topic.
